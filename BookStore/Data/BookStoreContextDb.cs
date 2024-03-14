@@ -10,9 +10,13 @@ namespace BookStore.Data
             
         }
         public virtual DbSet<Category> Categories { get; set; }
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    base.OnModelCreating(modelBuilder);
-        //}
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Category>().HasData(
+                new Category { Id = 1, Name = "History", DisplayOrder = 1},
+                new Category { Id = 2, Name = "Programming", DisplayOrder = 2 },
+                new Category { Id = 3, Name = "Mathematics", DisplayOrder = 3 },
+                new Category { Id = 4, Name = "Action", DisplayOrder = 4 });
+        }
     }
 }
