@@ -5,24 +5,47 @@
     ViewData["Title"] = "Category";
 }
 @model List<Category>
-<div class="text-center">
-    <h1 class="my-4">Category List</h1>
-    <table class="table table-bordered table-striped">
-        <thead>
+<div class="container">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Category List</h2>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-controller="Category" asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Create New Category
+            </a>
+        </div>
+    </div>
+    <div class="row pt-4">
+    
+        <table class="table table-bordered table-striped border-primary text-center">
+        <thead class="table-primary">
             <tr>
             <th>Name</th>
             <th>Display Order</th>
+            <th>Actions</th>
             </tr>
         </thead>
         <tbody class="table-group-divider">
-            @foreach(var cat in Model)
+            @foreach(var cat in Model.OrderBy(u => u.DisplayOrder))
             {
                 <tr>
                     <td>@cat.Name</td>
                     <td>@cat.DisplayOrder</td>
+                    <td>
+                        <div class="w-100 btn-group" role="group">
+                            <a asp-controller="Category" asp-action="Edit" asp-route-id="@cat.Id" class="btn btn-success">
+                                    <i class="bi bi-pencil-square"></i> Edit
+                            </a>
+                            <a asp-controller="Category" asp-action="Delete" asp-route-id="@cat.Id" class="btn btn-danger">
+                                    <i class="bi bi-trash"></i> Delete
+                            </a>
+                        </div>
+                    </td>
                 </tr>
             }
            
         </tbody>
     </table>
+    </div>
 </div>
