@@ -4,8 +4,9 @@ using BookStore.DataAccess.Repository.IRepository;
 using BookStore.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BookStore.Controllers
+namespace BookStore.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class CategoryController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -25,7 +26,7 @@ namespace BookStore.Controllers
         [HttpPost]
         public IActionResult Create(Category obj)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 _unitOfWork.Category.Add(obj);
                 _unitOfWork.Save();
@@ -37,28 +38,28 @@ namespace BookStore.Controllers
 
         public IActionResult Edit(int? id)
         {
-            if(id == null || id == 0)
+            if (id == null || id == 0)
             {
                 return NotFound();
             }
             Category? categoryFromDb = _unitOfWork.Category.Get(u => u.Id == id);
             if (categoryFromDb == null)
             {
-                return NotFound(); 
+                return NotFound();
             }
             return View(categoryFromDb);
         }
         [HttpPost]
         public IActionResult Edit(Category obj)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 _unitOfWork.Category.Update(obj);
                 _unitOfWork.Save();
                 TempData["success"] = "Category successfully updated.";
                 return RedirectToAction("Index");
             }
-            
+
             return View();
         }
 
@@ -75,21 +76,21 @@ namespace BookStore.Controllers
             }
             return View(categoryFromDb);
         }
-        [HttpPost,ActionName("Delete")]
+        [HttpPost, ActionName("Delete")]
         public IActionResult DeletePost(int? id)
         {
 
             Category? obj = _unitOfWork.Category.Get(u => u.Id == id);
-             if(obj == null)
-             {
+            if (obj == null)
+            {
                 return NotFound(id);
-             }
+            }
             _unitOfWork.Category.Delete(obj);
             _unitOfWork.Save();
             TempData["success"] = "Category successfully deleted.";
             return RedirectToAction("Index");
-            
-            
+
+
         }
     }
 }
