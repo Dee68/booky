@@ -1,0 +1,63 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Product";
+}
+@model List<Product>
+<div class="card shadow mt-4 border-0">
+    <div class="card-header bg-primary bg-gradient py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">Product List</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body py-4">
+        <div class="row pt-4">
+            <div class="col-6">
+            </div>
+            <div class="col-6 text-end">
+                <a asp-controller="Product" asp-action="Create" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Create New Product
+                </a>
+            </div>
+        </div>
+        <div class="row pt-4">
+
+            <table class="table table-bordered table-striped border-primary text-center">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>ISBN</th>
+                        <th>Price</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    @foreach (var prod in Model.OrderBy(u => u.Id))
+                    {
+                        <tr>
+                            <td>@prod.Title</td>
+                            <td>@prod.Author</td>
+                            <td>@prod.ISBN</td>
+                            <td>@prod.Price</td>
+                            <td>
+                                <div class="w-100 btn-group" role="group">
+                                    <a asp-controller="Product" asp-action="Edit" asp-route-id="@prod.Id" class="btn btn-success">
+                                        <i class="bi bi-pencil-square"></i> Edit
+                                    </a>
+                                    <a asp-controller="Product" asp-action="Delete" asp-route-id="@prod.Id" class="btn btn-danger">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
