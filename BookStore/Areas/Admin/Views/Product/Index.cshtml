@@ -18,7 +18,7 @@
             <div class="col-6">
             </div>
             <div class="col-6 text-end">
-                <a asp-controller="Product" asp-action="Create" class="btn btn-primary">
+                <a asp-controller="Product" asp-action="Upsert" class="btn btn-primary">
                     <i class="bi bi-plus-circle"></i> Create New Product
                 </a>
             </div>
@@ -32,6 +32,7 @@
                         <th>Author</th>
                         <th>ISBN</th>
                         <th>Price</th>
+                        <th>Category</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -43,9 +44,10 @@
                             <td>@prod.Author</td>
                             <td>@prod.ISBN</td>
                             <td>@prod.Price</td>
+                            <td>@prod.CategoryId</td>
                             <td>
                                 <div class="w-100 btn-group" role="group">
-                                    <a asp-controller="Product" asp-action="Edit" asp-route-id="@prod.Id" class="btn btn-success">
+                                    <a asp-controller="Product" asp-action="Upsert" asp-route-id="@prod.Id" class="btn btn-success">
                                         <i class="bi bi-pencil-square"></i> Edit
                                     </a>
                                     <a asp-controller="Product" asp-action="Delete" asp-route-id="@prod.Id" class="btn btn-danger">

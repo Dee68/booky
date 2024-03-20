@@ -1,6 +1,8 @@
 ﻿using BookStore.DataAccess.Repository;
 using BookStore.Models;
+using BookStore.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BookStore.Areas.Admin.Controllers
 {
@@ -17,49 +19,53 @@ namespace BookStore.Areas.Admin.Controllers
             List<Product> productList = _unitOfWork.Product.GetAll().ToList();
             return View(productList);
         }
-        public IActionResult Create()
+        public IActionResult Upsert(int? id)
         {
-            return View();
+            ProductVm productVm = new()
+            {
+                CategoryList = _unitOfWork.Category.GetAll().Select(u => new SelectListItem
+                {
+                    Text = u.Name,
+                    Value = u.Id.ToString()
+                }),
+                Product = new Product()
+            };
+            if(id == null || id == 0)
+            {
+                //create
+                return View(productVm);
+            }
+            else
+            {
+                //update
+                productVm.Product = _unitOfWork.Product.Get(u => u.Id == id);
+                return View(productVm);
+            }
+            
         }
         [HttpPost]
-        public IActionResult Create(Product product)
+        public IActionResult Upsert(ProductVm productVm)
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.Product.Add(product);
+                _unitOfWork.Product.Add(productVm.Product);
                 _unitOfWork.Save();
                 TempData["success"] = "Category successfully created.";
                 return RedirectToAction("Index");
             }
-            return View();
+            else
+            {
+                productVm.CategoryList = _unitOfWork.Category.GetAll().Select(u => new SelectListItem
+                {
+                    Text = u.Name,
+                    Value = u.Id.ToString()
+                });
+                return View(productVm);
+            }
+           
         }
 
-        public IActionResult Edit(int? id)
-        {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
-            Product? productFromDb = _unitOfWork.Product.Get(u => u.Id == id);
-            if (productFromDb == null)
-            {
-                return NotFound();
-            }
-            return View(productFromDb);
-        }
-        [HttpPost]
-        public IActionResult Edit(Product product)
-        {
-            if (ModelState.IsValid)
-            {
-                _unitOfWork.Product.Update(product);
-                _unitOfWork.Save();
-                TempData["success"] = "Product successfully updated.";
-                return RedirectToAction("Index");
-            }
-
-            return View();
-        }
+     
 
         public IActionResult Delete(int? id)
         {

@@ -1,0 +1,95 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Create Product";
+}
+@model ProductVm
+<div class="card shadow mt-4 border-0">
+    <div class="card-header bg-primary bg-gradient py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">Create Product</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body py-4">
+        <form method="post" class="row" enctype="multipart/form-data">
+            <input type="hidden" asp-for="Product.Id" />
+            <div class="border p-3">
+                <div class="form-floating py-2 col-12">
+                    <input class="form-control shadow border-0" asp-for="Product.Title" />
+                    <label class="ms-2" asp-for="Product.Title"></label>
+                    <span asp-validation-for="Product.Title" class="text-danger"></span>
+                </div>
+                <div class="form-floating py-2 col-12">
+                    <textarea class="form-control border-0 shadow" asp-for="Product.Description"></textarea>
+                    <label class="ms-2" asp-for="Product.Description"></label>
+                    <span asp-validation-for="Product.Description" class="text-danger"></span>
+                </div>
+                <div class="form-floating py-2 col-12">
+                    <input class="form-control border-0 shadow" asp-for="Product.ISBN" />
+                    <label class="ms-2" asp-for="Product.ISBN"></label>
+                    <span asp-validation-for="Product.ISBN" class="text-danger"></span>
+                </div>
+                <div class="form-floating py-2 col-12">
+                    <input class="form-control border-0 shadow" asp-for="Product.Author" />
+                    <label class="ms-2" asp-for="Product.Author"></label>
+                    <span asp-validation-for="Product.Author" class="text-danger"></span>
+                </div>
+                <div class="form-floating py-2 col-12">
+                    <input class="form-control border-0 shadow" asp-for="Product.ListPrice" />
+                    <label class="ms-2" asp-for="Product.ListPrice"></label>
+                    <span asp-validation-for="Product.ListPrice" class="text-danger"></span>
+                </div>
+                <div class="form-floating py-2 col-12">
+                    <input class="form-control border-0 shadow" asp-for="Product.Price" />
+                    <label class="ms-2" asp-for="Product.Price"></label>
+                    <span asp-validation-for="Product.Price" class="text-danger"></span>
+                </div>
+                <div class="form-floating py-2 col-12">
+                    <input class="form-control border-0 shadow" asp-for="Product.Price50" />
+                    <label class="ms-2" asp-for="Product.Price50"></label>
+                    <span asp-validation-for="Product.Price50" class="text-danger"></span>
+                </div>
+                <div class="form-floating py-2 col-12">
+                    <input class="form-control border-0 shadow" asp-for="Product.Price100" />
+                    <label class="ms-2" asp-for="Product.Price100"></label>
+                    <span asp-validation-for="Product.Price100" class="text-danger"></span>
+                </div>
+                <div class="form-floating py-2 col-12">
+                    <select asp-for="Product.CategoryId" class="form-select border-0 shadow" asp-items="@Model.CategoryList">
+                        <option disabled selected>--Select Category--</option>
+                    </select>
+                    <label class="ms-2" asp-for="Product.CategoryId"></label>
+                    <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
+                </div>
+                <div class="form-floating py-2 col-12">
+                    <input type="file" class="form-control border-0 shadow" asp-for="Product.ImageUrl" />
+                    <label class="ms-2" asp-for="Product.ImageUrl"></label>
+                    
+                </div>
+                <div class=" row pt-4">
+                    <div class="col-6 col-md-3">
+                        <button type="submit" class="btn btn-primary form-control">CREATE</button>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <a asp-controller="Product" asp-action="Index" class="btn btn-outline-secondary form-control">
+                            Back To List
+                        </a>
+                    </div>
+                </div>
+
+
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
