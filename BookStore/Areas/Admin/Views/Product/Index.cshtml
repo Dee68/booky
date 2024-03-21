@@ -44,7 +44,7 @@
                             <td>@prod.Author</td>
                             <td>@prod.ISBN</td>
                             <td>@prod.Price</td>
-                            <td>@prod.CategoryId</td>
+                            <td>@prod.Category.Name</td>
                             <td>
                                 <div class="w-100 btn-group" role="group">
                                     <a asp-controller="Product" asp-action="Upsert" asp-route-id="@prod.Id" class="btn btn-success">

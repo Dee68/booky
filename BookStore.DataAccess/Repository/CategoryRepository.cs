@@ -22,5 +22,7 @@ namespace BookStore.DataAccess.Repository
         {
             _db.Categories.Update(obj);
         }
+
+       
     }
 }

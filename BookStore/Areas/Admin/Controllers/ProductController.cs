@@ -18,7 +18,7 @@ namespace BookStore.Areas.Admin.Controllers
         }
         public IActionResult Index()
         {
-            List<Product> productList = _unitOfWork.Product.GetAll().ToList();
+            List<Product> productList = _unitOfWork.Product.GetAll(includeProperties:"Category").ToList();
             return View(productList);
         }
         public IActionResult Upsert(int? id)
@@ -74,19 +74,19 @@ namespace BookStore.Areas.Admin.Controllers
                         file.CopyTo(fileStream);
                     }
                     // get and save image url to product
-                    productVm.Product.ImageUrl = @"\images\product\" + fileName;
-                    if (productVm.Product.Id == 0)
-                    {
-                        _unitOfWork.Product.Add(productVm.Product);
-                        TempData["success"] = "Product successfully created.";
-                    }
-                    else
-                    {
-                        _unitOfWork.Product.Update(productVm.Product);
-                        TempData["success"] = "Product successfully updated.";
-                    }
+                    productVm.Product.ImageUrl = @"\images\product\" + fileName; 
                 }
-                
+                if (productVm.Product.Id == 0)
+                {
+                    _unitOfWork.Product.Add(productVm.Product);
+                    TempData["success"] = "Product successfully created.";
+                }
+                else
+                {
+                    _unitOfWork.Product.Update(productVm.Product);
+                    TempData["success"] = "Product successfully updated.";
+                }
+
                 _unitOfWork.Save();
                 
                 return RedirectToAction("Index");
