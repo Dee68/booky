@@ -21,7 +21,7 @@ namespace BookStore.DataAccess.Repository
         }
         public void Add(T entity)
         {
-            this.dbSet.Add(entity);
+            dbSet.Add(entity);
         }
 
         public void Delete(T entity)

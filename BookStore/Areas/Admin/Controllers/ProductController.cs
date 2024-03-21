@@ -10,9 +10,11 @@ namespace BookStore.Areas.Admin.Controllers
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        public ProductController(IUnitOfWork unitOfWork)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
         {
             _unitOfWork = unitOfWork; 
+            _webHostEnvironment = webHostEnvironment;
         }
         public IActionResult Index()
         {
@@ -44,13 +46,49 @@ namespace BookStore.Areas.Admin.Controllers
             
         }
         [HttpPost]
-        public IActionResult Upsert(ProductVm productVm)
+        public IActionResult Upsert(ProductVm productVm, IFormFile? file)
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.Product.Add(productVm.Product);
+                //get www root path
+                string wwwRoothPath = _webHostEnvironment.WebRootPath;
+                if(file != null)
+                {
+                    //get a random number for image name
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    //set the path to save image
+                    string productPath = Path.Combine(wwwRoothPath, @"images\product");
+                    if(!string.IsNullOrEmpty(productVm.Product.ImageUrl))
+                    {
+                        //delete old image
+                        var oldImagePath = Path.Combine(wwwRoothPath, productVm.Product.ImageUrl.TrimStart('\\'));
+                        if(System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+
+                        }
+
+                    }
+                    using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
+                    {
+                        file.CopyTo(fileStream);
+                    }
+                    // get and save image url to product
+                    productVm.Product.ImageUrl = @"\images\product\" + fileName;
+                    if (productVm.Product.Id == 0)
+                    {
+                        _unitOfWork.Product.Add(productVm.Product);
+                        TempData["success"] = "Product successfully created.";
+                    }
+                    else
+                    {
+                        _unitOfWork.Product.Update(productVm.Product);
+                        TempData["success"] = "Product successfully updated.";
+                    }
+                }
+                
                 _unitOfWork.Save();
-                TempData["success"] = "Category successfully created.";
+                
                 return RedirectToAction("Index");
             }
             else
