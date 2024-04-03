@@ -11,6 +11,9 @@ namespace BookStore.DataAccess.Repository
     {
         ICategoryRepository Category { get; }
         IProductRepository Product { get; }
+        IApplicationUserRepository ApplicationUser { get; }
+        ICompanyRepository Company { get; }
+        IProductImageRepository ProductImage { get; }
         void Save();
     }
 }
