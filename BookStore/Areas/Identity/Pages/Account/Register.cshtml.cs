@@ -43,6 +43,7 @@ namespace BookStore.Areas.Identity.Pages.Account
             UserManager<IdentityUser> userManager,
             RoleManager<IdentityRole> roleManager,
             IUserStore<IdentityUser> userStore,
+            IUserEmailStore<IdentityUser> emailStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
@@ -52,6 +53,7 @@ namespace BookStore.Areas.Identity.Pages.Account
             _userManager = userManager;
             _roleManager = roleManager;
             _userStore = userStore;
+            _emailStore = emailStore;
             _signInManager = signInManager;
             _logger = logger;
             _unitOfWork = unitOfWork;
@@ -131,8 +133,6 @@ namespace BookStore.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-
-
             Input = new()
             {
                 RoleList = _roleManager.Roles.Select(x => x.Name).Select(i => new SelectListItem
@@ -155,7 +155,7 @@ namespace BookStore.Areas.Identity.Pages.Account
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-            if (ModelState.IsValid)
+            if (_userStore != null && _emailStore != null && Input != null && ModelState.IsValid)
             {
                 var user = CreateUser();
 
@@ -221,9 +221,20 @@ namespace BookStore.Areas.Identity.Pages.Account
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
+
+
             }
 
-            // If we got this far, something failed, redisplay form
+            foreach (var key in ModelState.Keys)
+            {
+                var state = ModelState[key];
+                foreach (var error in state.Errors)
+                {
+                    _logger.LogError($"Validation error for {key}: {error.ErrorMessage}");
+                }
+            }
+
+
             return Page();
         }
 
