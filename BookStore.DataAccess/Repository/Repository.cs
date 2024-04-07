@@ -35,9 +35,20 @@ namespace BookStore.DataAccess.Repository
             this.dbSet.RemoveRange(entities);
         }
 
-        public T Get(Expression<Func<T, bool>> filter, string? includeProperties=null)
+        public T Get(Expression<Func<T, bool>> filter, string? includeProperties=null, bool tracked = false)
         {
-            IQueryable<T> query = dbSet;
+            IQueryable<T> query;
+            if (tracked)
+            {
+                query = dbSet;
+
+            }
+            else
+            {
+                query = dbSet.AsNoTracking();
+            }
+
+            query = query.Where(filter);
             if (!string.IsNullOrEmpty(includeProperties))
             {
                 foreach (var includeProp in includeProperties
@@ -46,22 +57,22 @@ namespace BookStore.DataAccess.Repository
                     query = query.Include(includeProp);
                 }
             }
-            query = query.Where(filter);
             return query.FirstOrDefault();
         }
 
-        public T Get(Expression<Func<T, bool>> filter)
-        {
-            throw new NotImplementedException();
-        }
+        
 
-        public IEnumerable<T> GetAll(string? includeProperties = null)
+        public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter, string? includeProperties = null)
         {
             IQueryable<T> query = dbSet;
-            if(!string.IsNullOrEmpty(includeProperties))
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+            if (!string.IsNullOrEmpty(includeProperties))
             {
                 foreach (var includeProp in includeProperties
-                    .Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries))
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     query = query.Include(includeProp);
                 }
@@ -74,5 +85,6 @@ namespace BookStore.DataAccess.Repository
             IQueryable<T> query = dbSet;
             return query.ToList();
         }
+
     }
 }

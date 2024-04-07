@@ -13,7 +13,7 @@ namespace BookStore.DataAccess.Repository
     {
         private BookStoreContextDb _db;
         public IApplicationUserRepository ApplicationUser { get; set; }
-        
+        public IShoppingCartRepository ShoppingCart { get; private set; }
         public ICompanyRepository Company { get; private set; }
         public ICategoryRepository Category { get; }
         public IProductRepository Product { get; }
@@ -25,6 +25,7 @@ namespace BookStore.DataAccess.Repository
             Product = new ProductRepository(_db);
             ApplicationUser = new ApplicationUserRepository(_db);
             ProductImage = new ProductImageRepository(_db);
+            ShoppingCart = new ShoppingCartRepository(_db);
             Company = new CompanyRepository(_db);
         }
 

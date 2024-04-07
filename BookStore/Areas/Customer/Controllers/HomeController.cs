@@ -1,7 +1,10 @@
 using BookStore.DataAccess.Repository;
 using BookStore.Models;
+using BookStore.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace BookStore.Areas.Customer.Controllers
 {
@@ -26,7 +29,47 @@ namespace BookStore.Areas.Customer.Controllers
         public IActionResult Details(int? id)
         {
             Product productObj = _unitOfWork.Product.Get(u => u.Id == id, includeProperties: "Category");
-            return View(productObj);
+            ShoppingCart cart = new()
+            {
+                Product = productObj,
+                Count = 1,
+                ProductId = productObj.Id,
+            };
+            return View(cart);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult Details(ShoppingCart shoppingCart)
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            shoppingCart.ApplicationUserId = userId;
+
+            ShoppingCart cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.ApplicationUserId == userId &&
+            u.ProductId == shoppingCart.ProductId);
+
+            if (cartFromDb != null)
+            {
+                //shopping cart exists
+                cartFromDb.Count += shoppingCart.Count;
+                _unitOfWork.ShoppingCart.Update(cartFromDb);
+                _unitOfWork.Save();
+            }
+            else
+            {
+                //add cart record
+                _unitOfWork.ShoppingCart.Add(shoppingCart);
+                _unitOfWork.Save();
+                HttpContext.Session.SetInt32(SD.SessionCart,
+                _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == userId).Count());
+            }
+            TempData["success"] = "Cart updated successfully";
+
+
+
+
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Privacy()

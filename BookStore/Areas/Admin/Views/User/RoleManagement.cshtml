@@ -12,7 +12,7 @@
         <form method="post" class="row">
             <input asp-for="ApplicationUser.Id" hidden />
             <div class="border p-3">
-                @*<div asp-validation-summary="ModelOnly"></div>*@
+                <div asp-validation-summary="ModelOnly"></div>
                 <div class="form-floating py-2 col-12">
                     <input asp-for="ApplicationUser.Name" readonly class="form-control border-0 shadow" />
                     <label asp-for="ApplicationUser.Name" class="ms-2"></label>

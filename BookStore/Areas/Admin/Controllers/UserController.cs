@@ -32,7 +32,7 @@ namespace BookStore.Areas.Admin.Controllers
         {
             return View();
         }
-        public IActionResult RoleManagment(string userId)
+        public IActionResult RoleManagement(string userId)
         {
 
             RoleManagementVM RoleVM = new RoleManagementVM()
@@ -55,7 +55,7 @@ namespace BookStore.Areas.Admin.Controllers
             return View(RoleVM);
         }
         [HttpPost]
-        public IActionResult RoleManagment(RoleManagementVM roleManagmentVM)
+        public IActionResult RoleManagement(RoleManagementVM roleManagmentVM)
         {
 
             string oldRole = _userManager.GetRolesAsync(_unitOfWork.ApplicationUser.Get(u => u.Id == roleManagmentVM.ApplicationUser.Id))

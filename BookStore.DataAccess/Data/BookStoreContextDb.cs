@@ -13,6 +13,7 @@ namespace BookStore.DataAccess.Data
         }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<ShoppingCart> ShoppingCarts { get; set; }
         public virtual DbSet<Company> Companies { get; set; }
         public virtual DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
